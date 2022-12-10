@@ -9,7 +9,7 @@ clear bg; clear pos12; clear pos34; clear pos56; clear pos78; clear u_pos34;
 % Data loaded in a struct access like: Fs = laser.Fs
 
 %%
-f=(1:1:6400);
+f=(1:1:64000);
 
 
 Avrg_coherence = mean(Coherence);
