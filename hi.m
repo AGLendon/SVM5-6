@@ -1,2 +1,0 @@
-bye
-you are cool
