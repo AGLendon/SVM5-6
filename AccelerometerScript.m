@@ -1,0 +1,2 @@
+LoadData;
+clear laser
