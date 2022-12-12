@@ -134,7 +134,7 @@ f5 = figure(Name='Mobility UC',Position =  [100, 0, 880, 780]);
  semilogx(f(2:end),20*log10(abs(Ymob_odd3U)),line2style);
  hold off
  xticks(xticks_values);
- legend(pos1,pos2,Location='best')
+ legend('Damped Stringer','Undamped Stringer',Location='best')
  xlabel('Frequency Hz');
  ylabel('Mobility amplitude dB');
  ylim([-95 0]);
@@ -152,7 +152,7 @@ ylabel('Coherence');
 ylim([0 1.05]);
 xlim([1 11000]);
 xticks(xticks_values);
-legend(pos1,pos2,Location='best')
+legend('Damped Stringer','Undamped Stringer',Location='best')
 thickenall_big
 
 fileName = strcat('UC_Mobility','.png');
