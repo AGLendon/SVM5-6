@@ -11,8 +11,12 @@ clear laser
 %%
 line1style = 'k--';
 line2style = 'g:';
+line3style = 'k-';
 xticks_values = [10e0 10e1 10e2 10e3 10e4];
 fn=fieldnames(acc);
+
+saveYmob = zeros(4,size(acc.bg.da.f,2)-1);
+saveGamma = zeros(4,size(acc.bg.da.f,2)-1);
 for i=1: numel(fn)
     fn1=fieldnames(acc.(fn{i}));    
     for j=1: numel(fn1)
@@ -68,7 +72,24 @@ HS_even = pagetranspose(HS(:,1,3));
 Ymob_even = HS_even(2:end)./(2*1j*pi*f(2:end));
 % Ymob_even = (da.HS(2:end,1,3))'./(2*1j*pi*f(2:end));
 
-
+%% Plotting H1 est
+if isequal('pos12',fn{i})
+f2_1 = figure(Name='FRF',Position =  [100, 0, 880, 780]);
+semilogx(f(1:end),20*log10(abs(HS_odd)),line3style);
+hold on
+semilogx(f(1:end),20*log10(abs(HS_even)),line2style);
+limits = ylim;
+plot(zeros(size(limits(1):limits(2)))+3353,limits(1):limits(2),'k:',HandleVisibility="off")
+legend(pos1,pos2,Location='best')
+ xlabel('Frequency Hz');
+ ylabel('FRF amplitude dB');
+ ylim([0 55]);
+ xlim([10 12000])
+ xticks_values_H1=sort([xticks_values,3.353e3]);
+ xticks(xticks_values_H1);
+ xtickformat('%.1e')
+ grid on
+end
 %% Plotting real part of Ymob
  f2 = figure(Name='Mobility',Position =  [100, 0, 880, 780]);
 % semilogx(f(2:end),20*log10(abs(Ymob_force)));
@@ -83,6 +104,7 @@ Ymob_even = HS_even(2:end)./(2*1j*pi*f(2:end));
  ylabel('Mobility amplitude dB');
  ylim([-95 0]);
  xlim([1 12000])
+ grid on
 
 % % Plotting angle of mobility
 % figure(3)
@@ -100,22 +122,24 @@ xlabel('Frequency Hz');
 ylabel('Amplitude dB');
 legend('Force inducer',Location='best')
 xticks(xticks_values);
+ grid on
+
 
 thickenall_big;
 %% Save figures
-saveFolder = fullfile(pwd,'\Plots\Accelerometer\');
-
-    fileName = strcat(fn{i},'_Coherence','.png');
-    filePath = fullfile(saveFolder, fileName);
-    exportgraphics(f1,filePath,"ContentType","image",'Resolution',600);
-
-    fileName = strcat(fn{i},'_Mobility','.png');
-    filePath = fullfile(saveFolder, fileName);
-    exportgraphics(f2,filePath,"ContentType","image",'Resolution',600);
-
-    fileName = strcat(fn{i},'_Amplitude','.png');
-    filePath = fullfile(saveFolder, fileName);
-    exportgraphics(f4,filePath,"ContentType","image",'Resolution',600);
+% saveFolder = fullfile(pwd,'\Plots\Accelerometer\');
+% 
+%     fileName = strcat(fn{i},'_Coherence','.png');
+%     filePath = fullfile(saveFolder, fileName);
+%     exportgraphics(f1,filePath,"ContentType","image",'Resolution',600);
+% 
+%     fileName = strcat(fn{i},'_Mobility','.png');
+%     filePath = fullfile(saveFolder, fileName);
+%     exportgraphics(f2,filePath,"ContentType","image",'Resolution',600);
+% 
+%     fileName = strcat(fn{i},'_Amplitude','.png');
+%     filePath = fullfile(saveFolder, fileName);
+%     exportgraphics(f4,filePath,"ContentType","image",'Resolution',600);
 %% Save Comparison Data
 if isequal('u_pos34',fn{i})
     Ymob_odd3U = Ymob_odd;
@@ -125,8 +149,21 @@ elseif isequal('pos34',fn{i})
     Ymob_odd3 = Ymob_odd;
     gamma2_accel_odd3 = gamma2_accel_odd;
 
+elseif isequal('pos12',fn{i})
+    saveYmob(1,:) = Ymob_odd;
+    saveYmob(2,:) = Ymob_even;
+    saveGamma(1,:)= gamma2_accel_odd(2:end);
+    saveGamma(2,:)= gamma2_accel_even(2:end);
+elseif isequal('pos56',fn{i})
+    saveYmob(3,:) = Ymob_odd;
+    saveGamma(3,:)= gamma2_accel_odd(2:end);
+elseif isequal('pos78',fn{i})
+    saveGamma(4,:)= gamma2_accel_even(2:end);
+    saveYmob(4,:) = Ymob_even;
 end
+
 end
+save("Data\Accelerometer\Accelerometer","f","saveYmob","saveGamma")
 %% 
 f5 = figure(Name='Mobility UC',Position =  [100, 0, 880, 780]);
  semilogx(f(2:end),20*log10(abs(Ymob_odd3)),line1style);
@@ -134,11 +171,13 @@ f5 = figure(Name='Mobility UC',Position =  [100, 0, 880, 780]);
  semilogx(f(2:end),20*log10(abs(Ymob_odd3U)),line2style);
  hold off
  xticks(xticks_values);
- legend('Damped Stringer','Undamped Stringer',Location='best')
+ legend('Damped Stinger','Undamped Stinger',Location='best')
  xlabel('Frequency Hz');
  ylabel('Mobility amplitude dB');
  ylim([-95 0]);
  xlim([100 1000])
+  grid on
+
 
 f6 = figure(Name='Coherence UC',Position =  [100, 0, 880, 780]);
 % semilogx(f,gamma2_force_tr);
@@ -153,7 +192,10 @@ ylim([0 1.05]);
 xlim([1 11000]);
 xticks(xticks_values);
 legend('Damped Stringer','Undamped Stringer',Location='best')
+ grid on
+
 thickenall_big
+saveFolder = fullfile(pwd,'\Plots\');
 
 fileName = strcat('UC_Mobility','.png');
     filePath = fullfile(saveFolder, fileName);
