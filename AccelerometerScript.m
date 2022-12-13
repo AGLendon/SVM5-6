@@ -13,6 +13,8 @@ line1style = 'k--';
 line2style = 'g:';
 line3style = 'k-';
 xticks_values = [10e0 10e1 10e2 10e3 10e4];
+saveFolder = fullfile(pwd,'\Plots\');
+
 fn=fieldnames(acc);
 
 saveYmob = zeros(4,size(acc.bg.da.f,2)-1);
@@ -195,7 +197,7 @@ legend('Damped Stringer','Undamped Stringer',Location='best')
  grid on
 
 thickenall_big
-saveFolder = fullfile(pwd,'\Plots\');
+
 
 fileName = strcat('UC_Mobility','.png');
     filePath = fullfile(saveFolder, fileName);
