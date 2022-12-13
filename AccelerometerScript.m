@@ -13,7 +13,6 @@ line1style = 'k--';
 line2style = 'g:';
 line3style = 'k-';
 xticks_values = [10e0 10e1 10e2 10e3 10e4];
-saveFolder = fullfile(pwd,'\Plots\');
 
 fn=fieldnames(acc);
 
@@ -52,7 +51,7 @@ f1 = figure(Name='Coherence',Position =  [100, 0, 880, 780]);
 semilogx(f,gamma2_accel_odd,line1style);
 hold on
 semilogx(f,gamma2_accel_even,line2style);
-
+grid on
 xlabel('Frequency Hz');
 ylabel('Coherence');
 ylim([0 1.05]);
@@ -126,22 +125,34 @@ legend('Force inducer',Location='best')
 xticks(xticks_values);
  grid on
 
+f_8 = figure(Name='Amplitude & Coherence',Position =  [100, 0, 880, 780]);
+yyaxis left
+semilogx(f(2:end),20*log10(abs(Ymob_odd)),line1style);
+hold on
+semilogx(f(2:end),20*log10(abs(Ymob_even)),line2style);
+ylabel('Coherence');
+ylim([0 1.05]);
 
+yyaxis right
+semilogx(f,10*log10(da.AS(:,1,1)),line3style);
+
+ylabel('Amplitude dB');
+xlabel('Frequency Hz');
 thickenall_big;
 %% Save figures
-% saveFolder = fullfile(pwd,'\Plots\Accelerometer\');
-% 
-%     fileName = strcat(fn{i},'_Coherence','.png');
-%     filePath = fullfile(saveFolder, fileName);
-%     exportgraphics(f1,filePath,"ContentType","image",'Resolution',600);
-% 
-%     fileName = strcat(fn{i},'_Mobility','.png');
-%     filePath = fullfile(saveFolder, fileName);
-%     exportgraphics(f2,filePath,"ContentType","image",'Resolution',600);
-% 
-%     fileName = strcat(fn{i},'_Amplitude','.png');
-%     filePath = fullfile(saveFolder, fileName);
-%     exportgraphics(f4,filePath,"ContentType","image",'Resolution',600);
+saveFolder = fullfile(pwd,'\Plots\Accelerometer\');
+
+    fileName = strcat(fn{i},'_Coherence','.png');
+    filePath = fullfile(saveFolder, fileName);
+    exportgraphics(f1,filePath,"ContentType","image",'Resolution',600);
+
+    fileName = strcat(fn{i},'_Mobility','.png');
+    filePath = fullfile(saveFolder, fileName);
+    exportgraphics(f2,filePath,"ContentType","image",'Resolution',600);
+
+    fileName = strcat(fn{i},'_Amplitude','.png');
+    filePath = fullfile(saveFolder, fileName);
+    exportgraphics(f4,filePath,"ContentType","image",'Resolution',600);
 %% Save Comparison Data
 if isequal('u_pos34',fn{i})
     Ymob_odd3U = Ymob_odd;
