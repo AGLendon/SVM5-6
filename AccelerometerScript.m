@@ -18,6 +18,7 @@ fn=fieldnames(acc);
 
 saveYmob = zeros(4,size(acc.bg.da.f,2)-1);
 saveGamma = zeros(4,size(acc.bg.da.f,2)-1);
+saveAS= zeros(2,size(acc.bg.da.AS,1));
 for i=1: numel(fn)
     fn1=fieldnames(acc.(fn{i}));    
     for j=1: numel(fn1)
@@ -90,6 +91,26 @@ legend(pos1,pos2,Location='best')
  xticks(xticks_values_H1);
  xtickformat('%.1e')
  grid on
+
+ %%
+f_8 = figure(Name='Amplitude & Coherence',Position =  [100, 0, 880, 780]);
+hold on
+yyaxis left
+h1 = semilogx(log10(f),gamma2_accel_odd);
+h2 = semilogx(log10(f),gamma2_accel_even,':');
+ylabel('Coherence');
+ylim([0 1.001]);
+%set(h,"XScale","log")
+
+yyaxis right
+h3 = semilogx(log10(f),10*log10(da.AS(:,1,1)));
+
+ylabel('Amplitude dB');
+xlabel('Frequency 10^n Hz');
+legend(pos1,pos2,'Force inducer',Location='south')
+grid on
+thickenall_big
+%return;
 end
 %% Plotting real part of Ymob
  f2 = figure(Name='Mobility',Position =  [100, 0, 880, 780]);
@@ -119,25 +140,13 @@ end
 
 f4 = figure(Name='Amplitude',Position =  [100, 0, 880, 780]);
 semilogx(f,10*log10(da.AS(:,1,1)),line1style);
+
+xticks(xticks_values);
 xlabel('Frequency Hz');
 ylabel('Amplitude dB');
 legend('Force inducer',Location='best')
 xticks(xticks_values);
  grid on
-
-f_8 = figure(Name='Amplitude & Coherence',Position =  [100, 0, 880, 780]);
-yyaxis left
-semilogx(f(2:end),20*log10(abs(Ymob_odd)),line1style);
-hold on
-semilogx(f(2:end),20*log10(abs(Ymob_even)),line2style);
-ylabel('Coherence');
-ylim([0 1.05]);
-
-yyaxis right
-semilogx(f,10*log10(da.AS(:,1,1)),line3style);
-
-ylabel('Amplitude dB');
-xlabel('Frequency Hz');
 thickenall_big;
 %% Save figures
 saveFolder = fullfile(pwd,'\Plots\Accelerometer\');
@@ -154,6 +163,8 @@ saveFolder = fullfile(pwd,'\Plots\Accelerometer\');
     filePath = fullfile(saveFolder, fileName);
     exportgraphics(f4,filePath,"ContentType","image",'Resolution',600);
 %% Save Comparison Data
+disp(fn{i})
+i
 if isequal('u_pos34',fn{i})
     Ymob_odd3U = Ymob_odd;
     gamma2_accel_odd3U = gamma2_accel_odd;
@@ -161,6 +172,7 @@ if isequal('u_pos34',fn{i})
 elseif isequal('pos34',fn{i})
     Ymob_odd3 = Ymob_odd;
     gamma2_accel_odd3 = gamma2_accel_odd;
+    %saveAS(1,:) = da.AS;
 
 elseif isequal('pos12',fn{i})
     saveYmob(1,:) = Ymob_odd;
@@ -173,10 +185,12 @@ elseif isequal('pos56',fn{i})
 elseif isequal('pos78',fn{i})
     saveGamma(4,:)= gamma2_accel_even(2:end);
     saveYmob(4,:) = Ymob_even;
+elseif isequal('bg',fn{i})
+    %saveAS(2,:) = da.AS;
 end
 
 end
-save("Data\Accelerometer\Accelerometer","f","saveYmob","saveGamma")
+%save("Data\Accelerometer\Accelerometer","f","saveYmob","saveGamma")
 %% 
 f5 = figure(Name='Mobility UC',Position =  [100, 0, 880, 780]);
  semilogx(f(2:end),20*log10(abs(Ymob_odd3)),line1style);
