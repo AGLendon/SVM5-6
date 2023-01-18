@@ -163,8 +163,6 @@ saveFolder = fullfile(pwd,'\Plots\Accelerometer\');
     filePath = fullfile(saveFolder, fileName);
     exportgraphics(f4,filePath,"ContentType","image",'Resolution',600);
 %% Save Comparison Data
-disp(fn{i})
-i
 if isequal('u_pos34',fn{i})
     Ymob_odd3U = Ymob_odd;
     gamma2_accel_odd3U = gamma2_accel_odd;
