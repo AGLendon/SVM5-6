@@ -146,7 +146,7 @@ for i1=1:Nchannel
         % H1 estimator
         HS(:,i1,i2)  = AS(:,i1,i2) ./ AS(:,i1,i1);
         % H2 estimator
-        % HS(:,i1,i2)  = AS(:,i2,i2) ./ AS(:,i2,i1);
+        %HS(:,i1,i2)  = AS(:,i2,i2) ./ AS(:,i2,i1);
     end
 end
 
