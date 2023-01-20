@@ -29,7 +29,10 @@ xlim([2 6400])
 grid on
 
 %%
-[pks,locs,hbwMag,hbwFreqIntersects] = halfBWFind(20*log10(abs(laser.H2_velocity(pos,:))),10,6);
+startPos = 20;
+numPeaks = 1;
+H2_Mob = 20*log10(abs(laser.H2_velocity(pos,startPos:end,:)));
+[pks,locs,hbwMag,hbwFreqIntersects,eta_loss] = halfBWFind(H2_Mob,f(startPos:end),10,numPeaks);
 
 semilogx(locs,pks,'or')
 for i = 1:length(hbwMag)
